@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Surprise For You 🌹</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#ffd6e0,#ff9aa2);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+overflow:hidden;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:20px;
+max-width:500px;
+text-align:center;
+position:relative;
+z-index:2;
+}
+
+h1{color:#ff4d6d;}
+
+#message,#poem{
+margin-top:20px;
+font-size:18px;
+line-height:1.6;
+opacity:0;
+transition:opacity 1.2s ease;
+}
+
+.show{opacity:1;}
+
+.poem-style{
+font-style:italic;
+white-space:pre-line;
+background:#fff0f5;
+padding:15px;
+border-radius:12px;
+margin-top:15px;
+}
+
+button{
+display:block;
+width:100%;
+margin-top:20px;
+padding:15px;
+border:none;
+border-radius:12px;
+font-size:18px;
+cursor:pointer;
+background:#ff4d6d;
+color:white;
+transition:0.3s;
+}
+
+button:hover{
+background:#e63956;
+transform:scale(1.05);
+}
+
+.heart{
+position:fixed;
+bottom:-20px;
+color:#ff4d6d;
+font-size:20px;
+animation:floatUp 6s linear infinite;
+opacity:0.7;
+}
+
+@keyframes floatUp{
+0%{transform:translateY(0);}
+100%{transform:translateY(-110vh);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌹 Surprise</h1>
+
+<p>Before you leave… I have something special just for you ❤️</p>
+
+<button id="surpriseBtn" onclick="showMessage()">💌 Click For Your Surprise</button>
+
+<div id="message">
+<p>
+From the first workout to every little memory we created…
+<br>From shy beginnings to forever dreams…
+<br>You have become my safest place, my happiest home!
+</p>
+
+<p>
+No matter how many fights, laughs and adventures...
+<br>I will always be with you and love with with all my heart ❤️
+</p>
+</div>
+
+<button id="poemBtn" style="display:none;" onclick="showPoem()">📜 One More Secret...</button>
+
+<div id="poem" class="poem-style">
+In every laugh, in every glance,
+We found our own little chance.
+From gym days to midnight talks,
+To quiet streets and long sweet walks.
+
+Through every fight and every cheer,
+My favorite place lives 400m near.
+In every universe, you are my north star,
+You’ll forever have my favorite heart. ❤️
+</div>
+
+<button onclick="location.href='index.html'">🌙 Back To Our Love Story…</button>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+window.showMessage=function(){
+document.getElementById("surpriseBtn").style.display="none";
+document.getElementById("message").style.opacity="1";
+document.getElementById("poemBtn").style.display="block";
+createHearts();
+}
+
+window.showPoem=function(){
+document.getElementById("poemBtn").style.display="none";
+document.getElementById("poem").style.opacity="1";
+}
+
+function createHearts(){
+for(let i=0;i<25;i++){
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.animationDuration=(3+Math.random()*3)+"s";
+document.body.appendChild(heart);
+}
+}
+
+});
+</script>
+
+
+</body>
+</html>

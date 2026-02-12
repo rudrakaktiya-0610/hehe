@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Games 🎮❤️</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#ffd6e0,#ff9aa2);
+text-align:center;
+}
+
+.container{
+background:white;
+padding:25px;
+margin:20px auto;
+border-radius:20px;
+max-width:650px;
+box-shadow:0 8px 25px rgba(0,0,0,0.15);
+}
+
+h1{color:#ff4d6d;}
+
+button{
+padding:14px;
+margin:8px;
+border:none;
+border-radius:12px;
+font-size:16px;
+background:#ff4d6d;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#e63956;
+transform:scale(1.05);
+}
+
+#gameBox{
+position:relative;
+width:100%;
+height:320px;
+border-radius:15px;
+background:#fff0f5;
+overflow:hidden;
+margin-top:15px;
+border:2px dashed #ffb6c1;
+}
+
+.quizBox{
+background:#fff0f5;
+padding:20px;
+border-radius:15px;
+margin-top:15px;
+border:2px dashed #ffb6c1;
+}
+
+.optionBtn{
+display:block;
+width:100%;
+margin:6px 0;
+background:#ff8fa3;
+}
+
+/* floating hearts */
+.heart{
+position:fixed;
+bottom:-20px;
+font-size:20px;
+color:#ff4d6d;
+animation:floatUp 6s linear infinite;
+opacity:0.7;
+}
+
+@keyframes floatUp{
+0%{transform:translateY(0);}
+100%{transform:translateY(-110vh);}
+}
+
+/* BIG nickname popup */
+.namePopup{
+position:absolute;
+background:#ff4d6d;
+color:white;
+padding:8px 14px;
+border-radius:20px;
+font-size:20px;
+font-weight:bold;
+transform:scale(0);
+animation:popName 0.4s forwards;
+white-space:nowrap;
+}
+
+@keyframes popName{
+to{transform:scale(1);}
+}
+
+#collectedNames{
+margin-top:12px;
+min-height:40px;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+justify-content:center;
+}
+
+.collectedTag{
+background:#ffd6e0;
+color:#ff4d6d;
+padding:6px 12px;
+border-radius:15px;
+font-weight:bold;
+font-size:15px;
+animation:fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>🎮 Our Love Games ❤️</h1>
+
+<button onclick="startHeartGame()">❤️ Heart Catcher</button>
+<button onclick="startQuiz()">🧠 Love Quiz</button>
+<button onclick="location.href='index.html'">🌙 Back To Our Love Story…</button>
+
+
+<h3 id="score"></h3>
+<p id="message"></p>
+
+<div id="gameBox"></div>
+<div id="collectedNames"></div>
+<div id="quizArea" class="quizBox" style="display:none;"></div>
+
+</div>
+
+<script>
+
+function appreciation(){
+let msgs=[
+"I'm so proud of you babe 😌❤️",
+"My favorite gamer 😚🔥",
+"You win my heart every time 🤗💖",
+"My strong cute champion 🤭💕"
+];
+return msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+function floatingHearts(){
+for(let i=0;i<12;i++){
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"vw";
+h.style.animationDuration=(3+Math.random()*3)+"s";
+document.body.appendChild(h);
+}
+}
+
+/* ❤️ HEART GAME */
+
+function startHeartGame(){
+
+let nicknames=["Jaanu ❤️","Hot Chocolate 🥰","Cutie 🥹","My Hero 😍","Sweet Heart 🤗","Darling 😘","Puppy 🤭","Baby 😚"];
+let availableNames=[...nicknames];
+
+let totalHearts=8;
+let score=0;
+
+document.getElementById("quizArea").style.display="none";
+
+let box=document.getElementById("gameBox");
+box.innerHTML="";
+document.getElementById("collectedNames").innerHTML="";
+document.getElementById("score").innerText="";
+document.getElementById("message").innerText="Catch the slow hearts 😌";
+
+for(let i=0;i<totalHearts;i++){
+
+let heart=document.createElement("div");
+heart.innerHTML="❤️";
+heart.style.position="absolute";
+heart.style.left=Math.random()*80+"%";
+heart.style.top=Math.random()*80+"%";
+heart.style.fontSize="28px";
+heart.style.cursor="pointer";
+heart.style.transition="1.8s linear";
+
+box.appendChild(heart);
+
+heart.moveInterval=setInterval(()=>{
+heart.style.left=Math.random()*80+"%";
+heart.style.top=Math.random()*80+"%";
+},2200);
+
+heart.onclick=function(){
+
+score++;
+clearInterval(heart.moveInterval);
+
+if(availableNames.length===0){
+availableNames=[...nicknames];
+}
+
+let randomIndex=Math.floor(Math.random()*availableNames.length);
+let selectedName=availableNames.splice(randomIndex,1)[0];
+
+let name=document.createElement("div");
+name.className="namePopup";
+name.innerText=selectedName;
+name.style.left=heart.style.left;
+name.style.top=heart.style.top;
+box.appendChild(name);
+setTimeout(()=>name.remove(),1200);
+
+let tag=document.createElement("div");
+tag.className="collectedTag";
+tag.innerText=selectedName;
+document.getElementById("collectedNames").appendChild(tag);
+
+heart.remove();
+document.getElementById("score").innerText="Score: "+score;
+
+if(score===totalHearts){
+document.getElementById("message").innerText=appreciation();
+floatingHearts();
+}
+
+};
+}
+}
+
+/* 🧠 QUIZ GAME */
+
+let questions=[
+{q:"First met each other",o:["Mall","Gym","College","Cafe"],a:1},
+{q:"What do we love most?",o:["Time together","Money","Phones","Sleep"],a:0},
+{q:"First proposal date",o:["6th October","11th April","1st January","20th March"],a:1},
+{q:"Naughtier Person",o:["You","Me","Both","None"],a:2},
+{q:"First chocolate",o:["Dairy Milk","Mars","KitKat","5 Star"],a:3},
+{q:"Our vibe together?",o:["Lovers","Chaos","Boring","Haters"],a:0},
+{q:"First big festival together",o:["Diwali","Eid & Ugadi","Holi","New Year"],a:1},
+{q:"Our Status?",o:["Married","Maybe","Forever","Commited"],a:2}
+];
+
+let currentQ=0;
+let quizScore=0;
+
+function startQuiz(){
+document.getElementById("gameBox").innerHTML="";
+document.getElementById("quizArea").style.display="block";
+currentQ=0;
+quizScore=0;
+showQuestion();
+}
+
+function showQuestion(){
+
+let qa=document.getElementById("quizArea");
+
+if(currentQ>=questions.length){
+qa.innerHTML="<h3>You scored "+quizScore+" / "+questions.length+"</h3><p>"+appreciation()+"</p>";
+floatingHearts();
+return;
+}
+
+let q=questions[currentQ];
+qa.innerHTML="<h3>"+q.q+"</h3>";
+
+q.o.forEach((opt,i)=>{
+let btn=document.createElement("button");
+btn.className="optionBtn";
+btn.innerText=opt;
+
+btn.onclick=function(){
+
+if(i===q.a){
+quizScore++;
+document.getElementById("message").innerText="Correct 😄 "+appreciation();
+}else{
+document.getElementById("message").innerText="Hehe cute try 😄";
+}
+
+currentQ++;
+showQuestion();
+};
+
+qa.appendChild(btn);
+});
+
+}
+
+</script>
+
+</body>
+</html>

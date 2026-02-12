@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Draw Something For Me ❤️</title>
+
+<style>
+body{
+margin:0;
+overflow:hidden;
+background:#fff0f5;
+font-family:Arial;
+}
+
+.topMessage{
+position:fixed;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+padding:10px 16px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.15);
+font-size:14px;
+text-align:center;
+max-width:90%;
+z-index:10;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+}
+
+.controls{
+position:fixed;
+bottom:12px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+padding:10px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.15);
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+justify-content:center;
+max-width:95%;
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:10px;
+background:#ff4d6d;
+color:white;
+font-size:13px;
+cursor:pointer;
+}
+
+button:hover{
+background:#e63956;
+}
+
+.colorBtn{
+width:26px;
+height:26px;
+border-radius:50%;
+border:2px solid white;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topMessage">
+You can write or draw something for me and send me a screenshot!  
+Then I'll rate it out of 10 🤭❤️
+</div>
+
+<canvas id="drawCanvas"></canvas>
+
+<div class="controls">
+
+<div class="colorBtn" style="background:#ffffff;border:2px solid #ccc" onclick="setColor('#ffffff')"></div>
+<div class="colorBtn" style="background:#ffc0cb" onclick="setColor('#ffc0cb')"></div>
+<div class="colorBtn" style="background:#000000" onclick="setColor('#000000')"></div>
+
+<button onclick="setSize(2)">Thin</button>
+<button onclick="setSize(10)">Thick</button>
+
+<button onclick="enableEraser()">🧽 Eraser</button>
+<button onclick="clearCanvas()">🧼 Clear</button>
+<button onclick="location.href='index.html'">🌙 Back To Our Love Story…</button>
+
+</div>
+
+<script>
+const canvas=document.getElementById("drawCanvas");
+const ctx=canvas.getContext("2d");
+
+function resizeCanvas(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize",resizeCanvas);
+
+let drawing=false;
+let currentColor="#ffc0cb";
+let currentSize=4;
+let erasing=false;
+
+ctx.lineCap="round";
+
+function setColor(color){
+currentColor=color;
+erasing=false;
+}
+
+function setSize(size){
+currentSize=size;
+}
+
+function enableEraser(){
+erasing=true;
+}
+
+function startDraw(e){
+drawing=true;
+draw(e);
+}
+
+function endDraw(){
+drawing=false;
+ctx.beginPath();
+}
+
+function draw(e){
+if(!drawing)return;
+
+const rect=canvas.getBoundingClientRect();
+const x=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+const y=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+
+ctx.lineWidth=erasing?20:currentSize;
+ctx.strokeStyle=erasing?"#fff0f5":currentColor;
+
+ctx.lineTo(x,y);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(x,y);
+}
+
+canvas.addEventListener("mousedown",startDraw);
+canvas.addEventListener("mouseup",endDraw);
+canvas.addEventListener("mousemove",draw);
+
+canvas.addEventListener("touchstart",startDraw);
+canvas.addEventListener("touchend",endDraw);
+canvas.addEventListener("touchmove",draw);
+
+function clearCanvas(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+</script>
+
+</body>
+</html>
+
