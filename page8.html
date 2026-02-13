@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scratch Cards ❤️</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#ffd6e0,#ff9aa2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.container{
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  max-width: 400px;
+  width: 90%;
+}
+
+h2{
+  color: #ff4d6d;
+  margin-bottom: 25px;
+}
+
+.card{
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+canvas{
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.writeArea{
+  width: 100%;
+  height: 65px;
+  margin-top: 10px;
+  border-radius: 14px;
+  border: none;
+  padding: 12px;
+  font-size: 18px;
+  text-align: center;
+  resize: none;
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+
+.hidden{
+  display: none;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>Scratch & Write Your Wish ❤️<br>Send me a screenshot</h2>
+
+<div class="card">
+  <canvas id="card1"></canvas>
+  <textarea class="writeArea hidden" placeholder="Make wish 1..."></textarea>
+</div>
+
+<div class="card">
+  <canvas id="card2"></canvas>
+  <textarea class="writeArea hidden" placeholder="Make wish 2..."></textarea>
+</div>
+
+<div class="card">
+  <canvas id="card3"></canvas>
+  <textarea class="writeArea hidden" placeholder="Make wish 3..."></textarea>
+</div>
+</div>
+
+<script>
+function createScratch(canvas){
+  const ctx = canvas.getContext("2d");
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 200;
+
+  ctx.fillStyle = "#ffb6c1";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "22px Arial, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("Win a Wish 💌", canvas.width/2, 110);
+
+  ctx.globalCompositeOperation = "destination-out";
+
+  let isDrawing = false;
+
+  canvas.addEventListener("mousedown", ()=>isDrawing=true);
+  canvas.addEventListener("mouseup", ()=>{
+    isDrawing=false;
+    checkReveal(canvas, ctx);
+  });
+  canvas.addEventListener("mousemove", scratch);
+
+  function scratch(e){
+    if(!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    ctx.beginPath();
+    ctx.arc(x, y, 18, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+function checkReveal(canvas, ctx){
+  const textarea = canvas.parentElement.querySelector("textarea");
+  const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  let transparent = 0;
+
+  for(let i=3; i<pixels.data.length; i+=4){
+    if(pixels.data[i]===0) transparent++;
+  }
+
+  const percent = transparent / (canvas.width * canvas.height);
+  if(percent > 0.5){
+    textarea.classList.remove("hidden");
+  }
+}
+
+createScratch(document.getElementById("card1"));
+createScratch(document.getElementById("card2"));
+createScratch(document.getElementById("card3"));
+</script>
+</body>
+</html>
