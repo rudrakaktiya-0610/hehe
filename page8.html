@@ -55,6 +55,7 @@ canvas{
   height: 200px;
   border-radius: 15px;
   cursor: pointer;
+  touch-action: none; /* Prevent scrolling while drawing */
 }
 
 .writeArea{
@@ -80,12 +81,9 @@ canvas{
 <body>
 <div class="container">
 
-  <!-- Back button -->
-
   <h2>Scratch & Write Your Wish ❤️<br>Send me a screenshot</h2>
 
-    <button onclick="location.href='index.html'">🌙 Back To Our Love Story…</button>
-
+  <button onclick="location.href='index.html'">🌙 Back To Our Love Story…</button>
 
   <div class="card">
     <canvas id="card1"></canvas>
@@ -106,52 +104,92 @@ canvas{
 <script>
 function createScratch(canvas){
   const ctx = canvas.getContext("2d");
-  canvas.width = canvas.offsetWidth;
-  canvas.height = 200;
 
-  ctx.fillStyle = "#ffb6c1";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Set canvas size
+  function resizeCanvas(){
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 200;
+    drawOverlay();
+  }
 
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "22px Arial, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("Win a Wish 💌", canvas.width/2, 110);
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
 
-  ctx.globalCompositeOperation = "destination-out";
+  function drawOverlay(){
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#ffb6c1";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "22px Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Win a Wish 💌", canvas.width/2, 110);
+
+    ctx.globalCompositeOperation = "destination-out"; // for scratching
+  }
 
   let isDrawing = false;
 
-  canvas.addEventListener("mousedown", ()=>isDrawing=true);
-  canvas.addEventListener("mouseup", ()=>{
-    isDrawing=false;
-    checkReveal(canvas, ctx);
-  });
-  canvas.addEventListener("mousemove", scratch);
+  function getXY(e){
+    const rect = canvas.getBoundingClientRect();
+    let x, y;
+    if(e.touches){
+      x = e.touches[0].clientX - rect.left;
+      y = e.touches[0].clientY - rect.top;
+    } else {
+      x = e.clientX - rect.left;
+      y = e.clientY - rect.top;
+    }
+    return {x, y};
+  }
 
   function scratch(e){
     if(!isDrawing) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    e.preventDefault();
+    const {x, y} = getXY(e);
     ctx.beginPath();
     ctx.arc(x, y, 18, 0, Math.PI*2);
     ctx.fill();
   }
-}
 
-function checkReveal(canvas, ctx){
-  const textarea = canvas.parentElement.querySelector("textarea");
-  const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  let transparent = 0;
-
-  for(let i=3; i<pixels.data.length; i+=4){
-    if(pixels.data[i]===0) transparent++;
+  function startDraw(e){
+    isDrawing = true;
+    scratch(e);
   }
 
-  const percent = transparent / (canvas.width * canvas.height);
-  if(percent > 0.5){
-    textarea.classList.remove("hidden");
+  function stopDraw(){
+    if(isDrawing){
+      isDrawing = false;
+      checkReveal();
+    }
   }
+
+  function checkReveal(){
+    const textarea = canvas.parentElement.querySelector("textarea");
+    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let transparent = 0;
+
+    for(let i=3; i<pixels.data.length; i+=4){
+      if(pixels.data[i]===0) transparent++;
+    }
+
+    const percent = transparent / (canvas.width * canvas.height);
+    if(percent > 0.5){
+      textarea.classList.remove("hidden");
+    }
+  }
+
+  // Mouse events
+  canvas.addEventListener("mousedown", startDraw);
+  canvas.addEventListener("mousemove", scratch);
+  canvas.addEventListener("mouseup", stopDraw);
+  canvas.addEventListener("mouseout", stopDraw);
+
+  // Touch events
+  canvas.addEventListener("touchstart", startDraw);
+  canvas.addEventListener("touchmove", scratch);
+  canvas.addEventListener("touchend", stopDraw);
+  canvas.addEventListener("touchcancel", stopDraw);
 }
 
 createScratch(document.getElementById("card1"));
