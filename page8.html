@@ -15,6 +15,7 @@ body{
   align-items: center;
   min-height: 100vh;
   text-align: center;
+  padding: 20px;
 }
 
 .container{
@@ -24,6 +25,18 @@ body{
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   max-width: 400px;
   width: 90%;
+}
+
+button{
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
 }
 
 h2{
@@ -66,22 +79,28 @@ canvas{
 
 <body>
 <div class="container">
-<h2>Scratch & Write Your Wish ❤️<br>Send me a screenshot</h2>
 
-<div class="card">
-  <canvas id="card1"></canvas>
-  <textarea class="writeArea hidden" placeholder="Make wish 1..."></textarea>
-</div>
+  <!-- Back button -->
 
-<div class="card">
-  <canvas id="card2"></canvas>
-  <textarea class="writeArea hidden" placeholder="Make wish 2..."></textarea>
-</div>
+  <h2>Scratch & Write Your Wish ❤️<br>Send me a screenshot</h2>
 
-<div class="card">
-  <canvas id="card3"></canvas>
-  <textarea class="writeArea hidden" placeholder="Make wish 3..."></textarea>
-</div>
+    <button onclick="location.href='index.html'">🌙 Back To Our Love Story…</button>
+
+
+  <div class="card">
+    <canvas id="card1"></canvas>
+    <textarea class="writeArea hidden" placeholder="Make wish 1..."></textarea>
+  </div>
+
+  <div class="card">
+    <canvas id="card2"></canvas>
+    <textarea class="writeArea hidden" placeholder="Make wish 2..."></textarea>
+  </div>
+
+  <div class="card">
+    <canvas id="card3"></canvas>
+    <textarea class="writeArea hidden" placeholder="Make wish 3..."></textarea>
+  </div>
 </div>
 
 <script>

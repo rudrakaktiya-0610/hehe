@@ -35,6 +35,18 @@ video{
   width: 100%;
   border-radius: 20px;
   box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+  margin-bottom: 20px; /* Add some space below video */
+}
+
+button{
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -46,6 +58,9 @@ video{
   <video controls>
     <source src="videos/video1.mp4" type="video/mp4">
   </video>
+  
+  <!-- Back button -->
+  <button onclick="location.href='index.html'">🌙 Back To Our Love Story…</button>
 </div>
 
 </body>
